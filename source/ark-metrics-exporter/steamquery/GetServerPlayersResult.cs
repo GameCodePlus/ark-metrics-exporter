@@ -38,7 +38,8 @@ namespace com.gamecodeplus.arkmetricsexporter.steamquery
                     p.PlayerName = br.ReadStringNullTerminated();
                     p.Score = br.ReadUInt32();
                     p.Duration = br.ReadSingle();
-                    result.m_playerInfo.Add(p);
+                    if (!String.IsNullOrWhiteSpace(p.PlayerName))
+                        result.m_playerInfo.Add(p);
                 }
 
                 return result;
