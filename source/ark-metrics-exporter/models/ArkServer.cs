@@ -75,7 +75,18 @@ namespace com.gamecodeplus.arkmetricsexporter.models
                             PrometheusMgr.PlayerOnlineGague.RemoveLabelled(item);
                         }
                     }
+
+                    curLabels = PrometheusMgr.PlayerCountGague.GetAllLabelValues();
+                    if (curLabels != null)
+                    {
+                        foreach (var item in curLabels)
+                        {
+                            PrometheusMgr.PlayerCountGague.RemoveLabelled(item);
+                        }
+                    }
                 }
+
+                PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(playerInfo.Players.Count);
 
                 foreach (var player in playerInfo.Players)
                 {
@@ -108,7 +119,10 @@ namespace com.gamecodeplus.arkmetricsexporter.models
                     }
                 }
             }
-            catch (Exception) { }
+            catch (Exception) 
+            {
+                PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(0);
+            }
         }
 
         private void ProcessServerInfo()
@@ -132,20 +146,20 @@ namespace com.gamecodeplus.arkmetricsexporter.models
                         }
                     }
 
-                    curLabels = PrometheusMgr.PlayerCountGague.GetAllLabelValues();
-                    if (curLabels != null)
-                    {
-                        foreach (var item in curLabels)
-                        {
-                            PrometheusMgr.PlayerCountGague.RemoveLabelled(item);
-                        }
-                    }
+                    //curLabels = PrometheusMgr.PlayerCountGague.GetAllLabelValues();
+                    //if (curLabels != null)
+                    //{
+                    //    foreach (var item in curLabels)
+                    //    {
+                    //        PrometheusMgr.PlayerCountGague.RemoveLabelled(item);
+                    //    }
+                    //}
                 }
                 serverName = serverInfo.Name;
 
                 // Update the "IsUp" gague setting to "true"
                 PrometheusMgr.IsUpGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(1);
-                PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(serverInfo.Players);
+                //PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(serverInfo.Players);
             }
             catch (Exception)
             {
@@ -153,7 +167,7 @@ namespace com.gamecodeplus.arkmetricsexporter.models
 
                 // Update the "IsUp" gague setting to "false"
                 PrometheusMgr.IsUpGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", curName }).Set(0);
-                PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(0);
+                //PrometheusMgr.PlayerCountGague.WithLabels(new string[] { configItem.IPAddress, configItem.Port.ToString(), $"{configItem.IPAddress}:{configItem.Port}", serverName }).Set(0);
             }
         }
     }
