@@ -24,6 +24,16 @@ servers:
     port: 5290
 ```
 
+Docker Image
+------------
+
+This application can be run as a docker container with the following configuration:
+```bash
+docker run -d -p 7777:7777 \
+    -v /path/to/config.yaml:/app/config.yaml \
+    gamecodeplus/ark-metrics-exporter
+```
+
 Notes
 -----
 Currently the application will not export the first set of results for approximately 30s after the application has started.  The metrics export page should exist at http://{ip address}:{prometheus-port}/metrics however the metrics data will not exist immediately as the servers are queried for the first time.
